@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0d0b" />
+    <meta name="description" content="按类型与品牌管理 181 种酒柜材料，组合筛选 129 款配方，并记录每一次比例实验。" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css?v=19" />
+    <title>MixLab 私人调酒实验室</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <button class="top-back" id="topBackButton" aria-label="返回上一级" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"></path></svg></button>
+        <button class="brand" id="homeButton" aria-label="返回发现页"><span class="brand-mark" aria-hidden="true"><i></i></span><span>MixLab</span></button>
+        <span class="top-title" id="topTitle"></span>
+        <div class="top-actions">
+          <button class="icon-button" id="quickSearchButton" aria-label="搜索配方"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.6"></circle><path d="m16 16 4 4"></path></svg></button>
+          <button class="icon-button" id="dataButton" aria-label="数据与设置"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg></button>
+        </div>
+      </header>
+
+      <main id="appMain" tabindex="-1"></main>
+
+      <nav class="bottom-nav" aria-label="主导航">
+        <button class="nav-item active" data-view="discover" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5"></path><path d="M6.5 10.5V20h11v-9.5M9.5 20v-6h5v6"></path></svg><span>发现</span></button>
+        <button class="nav-item" data-view="recipes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14l-5.5 7v6.2l-3 1.8v-8z"></path></svg><span>配方</span></button>
+        <button class="nav-item add-nav" data-action="open-quick-actions" aria-label="打开快捷操作"><span>＋</span><small>快捷</small></button>
+        <button class="nav-item" data-view="pantry"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8v4l2 3v11H6V10l2-3z"></path><path d="M8 7h8"></path></svg><span>酒柜</span></button>
+        <button class="nav-item" data-view="journal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"></path><path d="M8 4v16M11 9h5M11 13h5"></path></svg><span>实验</span></button>
+      </nav>
+    </div>
+
+    <dialog class="app-dialog recipe-dialog" id="recipeDialog" aria-labelledby="recipeDialogTitle"><div id="recipeDialogContent"></div></dialog>
+    <dialog class="app-dialog ingredient-dialog" id="ingredientDialog" aria-labelledby="ingredientDialogTitle"><div id="ingredientDialogContent"></div></dialog>
+
+    <dialog class="app-dialog filter-dialog" id="filterDialog" aria-labelledby="filterDialogTitle">
+      <div class="dialog-bar"><div><p class="eyebrow accent">COMBINATION FILTER</p><h2 id="filterDialogTitle">组合筛选</h2></div><button class="icon-button" type="button" data-close-dialog="filterDialog" aria-label="关闭">×</button></div>
+      <div id="filterDialogContent"></div>
+    </dialog>
+
+    <dialog class="app-dialog session-dialog" id="sessionDialog" aria-labelledby="sessionDialogTitle">
+      <form id="sessionForm">
+        <div class="dialog-bar"><div><p class="eyebrow accent">TASTING SESSION</p><h2 id="sessionDialogTitle">记录本次调制</h2></div><button class="icon-button" type="button" data-close-dialog="sessionDialog" aria-label="关闭">×</button></div>
+        <input type="hidden" name="sessionId" /><input type="hidden" name="recipeId" />
+        <div class="form-content compact-session-form">
+          <label class="field"><span>给这杯起个名字 <small>可选</small></span><input name="batchName" maxlength="30" placeholder="例如：青柠少糖 #3" /></label>
+          <section class="form-section"><div class="section-line"><div><span>实际比例</span><small>默认采用标准配方，可直接微调</small></div><button class="text-button" type="button" data-action="add-session-ingredient">＋ 材料</button></div><div class="ratio-source-actions"><button type="button" data-action="apply-standard-ratio">标准比例</button><button type="button" id="lastRatioButton" data-action="apply-last-ratio">上次比例</button></div><div class="ratio-editor" id="sessionRatioEditor"></div></section>
+          <label class="field"><span>总体评分</span><div class="rating-input" id="sessionRating" role="radiogroup" aria-label="总体评分"></div></label>
+          <label class="field"><span>这杯的评价</span><textarea name="review" rows="4" maxlength="500" placeholder="酸甜是否平衡、香气、口感、余味……"></textarea></label>
+          <label class="field"><span>下次调整</span><textarea name="nextAdjustment" rows="3" maxlength="300" placeholder="例如：糖浆减 5 ml，摇和时间增加 2 秒"></textarea></label>
+          <details class="advanced-session" id="sessionAdvanced"><summary><span>更多记录项</span><small>时间、冰块、方式与感官维度</small></summary><div class="advanced-session-body"><label class="field"><span>日期与时间</span><input type="datetime-local" name="madeAt" required /></label><div class="form-grid two"><label class="field"><span>冰与温度</span><select name="ice"><option>大冰块</option><option>方冰</option><option>碎冰</option><option>无冰冷饮</option><option>热饮</option></select></label><label class="field"><span>调制方式</span><select name="method"><option>摇和</option><option>搅拌</option><option>直调</option><option>捣压</option><option>搅打</option><option>滚杯</option></select></label></div><section class="form-section taste-section"><div class="section-line"><div><span>感官评分</span><small>每个维度 1–5</small></div></div><div class="taste-sliders" id="tasteSliders"></div></section></div></details>
+          <div class="dialog-actions sticky-actions"><button type="button" class="danger-ghost" id="deleteSessionButton" data-action="delete-session" hidden>删除记录</button><button type="submit" class="primary-button">保存本次实验</button></div>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog version-dialog" id="versionDialog" aria-labelledby="versionDialogTitle">
+      <form id="versionForm">
+        <div class="dialog-bar"><div><p class="eyebrow accent">MY REVISION</p><h2 id="versionDialogTitle">创建我的改版</h2></div><button class="icon-button" type="button" data-close-dialog="versionDialog" aria-label="关闭">×</button></div>
+        <input type="hidden" name="versionId" /><input type="hidden" name="sourceRecipeId" />
+        <div class="form-content">
+          <label class="field"><span>改版名称</span><input name="name" required maxlength="40" /></label>
+          <section class="form-section"><div class="section-line"><div><span>定稿比例</span><small>可从最近一次实验带入</small></div><button class="text-button" type="button" data-action="add-version-ingredient">＋ 材料</button></div><div class="ratio-editor" id="versionRatioEditor"></div></section>
+          <label class="field"><span>固定做法</span><textarea name="steps" required rows="5" placeholder="每行一个步骤"></textarea></label>
+          <label class="field"><span>改版思路</span><textarea name="rationale" rows="4" maxlength="500" placeholder="这版解决了什么问题？为什么采用这个比例？"></textarea></label>
+          <label class="field"><span>参考实验</span><div class="session-picker" id="versionSessionPicker"></div></label>
+          <button type="submit" class="primary-button full">保存我的改版</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog form-dialog" id="recipeFormDialog" aria-labelledby="recipeFormTitle">
+      <form id="recipeForm">
+        <div class="dialog-bar"><div><p class="eyebrow accent">PERSONAL RECIPE</p><h2 id="recipeFormTitle">新建自由配方</h2></div><button class="icon-button" type="button" data-close-dialog="recipeFormDialog" aria-label="关闭">×</button></div>
+        <div class="form-content">
+          <label class="field"><span>配方名称</span><input name="name" required maxlength="40" placeholder="例如：我的柚香金酒苏打" /></label>
+          <label class="field"><span>材料与用量</span><textarea name="ingredients" required rows="7" placeholder="每行一种：金酒 | 45 ml&#10;西柚汁 | 25 ml&#10;苏打水 | 90 ml"></textarea><small>每行按“材料 | 用量”填写</small></label>
+          <div class="form-grid two"><label class="field"><span>杯型</span><input name="glass" value="高球杯" /></label><label class="field"><span>方式</span><select name="method"><option>直调</option><option>摇和</option><option>搅拌</option><option>捣压</option><option>搅打</option></select></label></div>
+          <label class="field"><span>步骤</span><textarea name="steps" required rows="5" placeholder="每行一个步骤"></textarea></label>
+          <label class="field"><span>风味与备注</span><textarea name="notes" rows="4" placeholder="适合的冰、装饰、风味目标……"></textarea></label>
+          <button class="primary-button full" type="submit">保存到我的配方</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog search-dialog" id="searchDialog" aria-labelledby="searchDialogTitle">
+      <div class="dialog-bar"><div><p class="eyebrow accent">QUICK SEARCH</p><h2 id="searchDialogTitle">快速搜索</h2></div><button class="icon-button" type="button" data-close-dialog="searchDialog" aria-label="关闭">×</button></div>
+      <div class="search-pad"><label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.6"></circle><path d="m16 16 4 4"></path></svg><input id="globalSearchInput" type="search" placeholder="配方、材料、风味或英文名" autocomplete="off" /></label><div class="search-results" id="searchResults"></div></div>
+    </dialog>
+
+    <dialog class="app-dialog quick-actions-dialog" id="quickActionsDialog" aria-labelledby="quickActionsTitle">
+      <div class="dialog-bar"><div><p class="eyebrow accent">QUICK ACTIONS</p><h2 id="quickActionsTitle">现在想做什么？</h2></div><button class="icon-button" type="button" data-close-dialog="quickActionsDialog" aria-label="关闭">×</button></div>
+      <div class="quick-action-list" id="quickActionsContent"></div>
+    </dialog>
+
+    <dialog class="app-dialog quick-pantry-dialog" id="quickPantryDialog" aria-labelledby="quickPantryTitle">
+      <div class="dialog-bar"><div><p class="eyebrow accent">QUICK INVENTORY</p><h2 id="quickPantryTitle">快速盘点酒柜</h2></div><button class="icon-button" type="button" data-close-dialog="quickPantryDialog" aria-label="关闭">×</button></div>
+      <div class="quick-pantry-content"><label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.6"></circle><path d="m16 16 4 4"></path></svg><input id="quickPantrySearch" type="search" placeholder="搜索材料，点一下切换" autocomplete="off" /></label><div class="quick-pantry-status" id="quickPantryStatus"></div><div class="quick-pantry-list" id="quickPantryList" data-scroll-key="quick-pantry-list"></div></div>
+      <div class="quick-pantry-footer"><button class="primary-button full" data-close-dialog="quickPantryDialog">完成盘点</button></div>
+    </dialog>
+
+    <dialog class="app-dialog form-dialog" id="customIngredientDialog" aria-labelledby="customIngredientTitle">
+      <form id="customIngredientForm">
+        <div class="dialog-bar"><div><p class="eyebrow accent">CUSTOM INGREDIENT</p><h2 id="customIngredientTitle">添加自定义材料</h2></div><button class="icon-button" type="button" data-close-dialog="customIngredientDialog" aria-label="关闭">×</button></div>
+        <div class="form-content">
+          <label class="field"><span>材料名称</span><input name="name" required maxlength="40" placeholder="品牌或自制材料名称" /></label>
+          <label class="field"><span>类别</span><select name="group"><option>基酒</option><option>利口酒</option><option>葡萄酒与发酵酒</option><option>果汁与鲜果</option><option>气泡与调和</option><option>糖浆与甜味</option><option>苦精香料与装饰</option><option>厨房与质地</option><option>自定义材料</option></select></label>
+          <label class="field"><span>风味描述</span><textarea name="profile" rows="3" maxlength="240" placeholder="例如：烟熏明显、柑橘、微甜"></textarea></label>
+          <label class="field"><span>酒精度或规格</span><input name="abv" maxlength="30" placeholder="例如：40% 或 无酒精" /></label>
+          <button class="primary-button full" type="submit">保存并加入酒柜</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog data-dialog" id="dataDialog" aria-labelledby="dataDialogTitle">
+      <div class="dialog-bar"><div><p class="eyebrow accent">MY MIXLAB</p><h2 id="dataDialogTitle">数据与设置</h2></div><button class="icon-button" type="button" data-close-dialog="dataDialog" aria-label="关闭">×</button></div>
+      <section class="update-panel" id="updatePanel" aria-live="polite">
+        <div class="update-panel-loading"><span></span><p>正在读取应用版本…</p></div>
+      </section>
+      <div class="data-list">
+        <button data-action="export-data"><span><strong>导出完整备份</strong><small>酒柜、实验、评价和改版都会保存</small></span><b>↓</b></button>
+        <label class="file-action"><span><strong>导入备份</strong><small>从 MixLab JSON 文件恢复</small></span><b>↑</b><input id="importFile" type="file" accept="application/json,.json" /></label>
+        <button class="danger-action" data-action="reset-data"><span><strong>恢复初始数据</strong><small>清除这台设备上的所有个性化内容</small></span><b>×</b></button>
+      </div>
+      <p class="privacy-note">更新源只保存公开的程序文件。你的酒柜、实验、评价和改版仍仅保存在当前设备；建议定期导出备份。</p>
+    </dialog>
+
+    <dialog class="confirm-dialog" id="confirmDialog"><form method="dialog"><h2 id="confirmTitle">确认操作？</h2><p id="confirmMessage"></p><div class="dialog-actions"><button value="cancel" class="secondary-button">取消</button><button value="confirm" class="danger-button">确认</button></div></form></dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="./data.js?v=19"></script>
+    <script src="./app.js?v=19" defer></script>
+  </body>
+</html>
