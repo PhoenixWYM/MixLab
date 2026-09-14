@@ -1,16 +1,16 @@
 {
-  "versionCode": 8,
-  "versionName": "2.6",
+  "versionCode": 9,
+  "versionName": "2.7",
   "apkUrl": "https://mixlab-cocktail-cabinet.ym-wang331.chatgpt.site/downloads/MixLab-latest.apk",
   "apkUrls": [
-    "https://gh-proxy.com/https://raw.githubusercontent.com/PhoenixWYM/MixLab/a9f1976e56489d57f0386fc24be4a8eaa970b17b/downloads/MixLab-2.6.apk",
-    "https://github.dpik.top/https://raw.githubusercontent.com/PhoenixWYM/MixLab/a9f1976e56489d57f0386fc24be4a8eaa970b17b/downloads/MixLab-2.6.apk",
-    "https://cdn.jsdelivr.net/gh/PhoenixWYM/MixLab@a9f1976e56489d57f0386fc24be4a8eaa970b17b/downloads/MixLab-2.6.apk",
-    "https://raw.githubusercontent.com/PhoenixWYM/MixLab/a9f1976e56489d57f0386fc24be4a8eaa970b17b/downloads/MixLab-2.6.apk",
+    "https://gh-proxy.com/https://raw.githubusercontent.com/PhoenixWYM/MixLab/6d0cde275ad58dce78fe6b5b0c24b76d1fd1b0da/downloads/MixLab-2.7.apk",
+    "https://github.dpik.top/https://raw.githubusercontent.com/PhoenixWYM/MixLab/6d0cde275ad58dce78fe6b5b0c24b76d1fd1b0da/downloads/MixLab-2.7.apk",
+    "https://cdn.jsdelivr.net/gh/PhoenixWYM/MixLab@6d0cde275ad58dce78fe6b5b0c24b76d1fd1b0da/downloads/MixLab-2.7.apk",
+    "https://raw.githubusercontent.com/PhoenixWYM/MixLab/6d0cde275ad58dce78fe6b5b0c24b76d1fd1b0da/downloads/MixLab-2.7.apk",
     "https://mixlab-cocktail-cabinet.ym-wang331.chatgpt.site/downloads/MixLab-latest.apk"
   ],
-  "sha256": "01CE857D29731BC539954281763EF2F4431AC1B06878539E1854A3EF9370F3A4",
-  "sizeBytes": 4949041,
-  "publishedAt": "2026-09-14T07:16:42Z",
-  "notes": "更新服务 2.6：GitHub 更新源增加两条国内网络可用的加速线路，并保留 CDN、GitHub 直连和原站点备用。任一线路不可用时会自动切换，下载完成后必须通过 SHA-256 校验，再由小米系统覆盖升级；酒柜、实验记录、评价和个人改版都会保留。"
+  "sha256": "E7CA9785C169AC4492113C44C1BB205A2A7651B8D79A7612A56B8F8B2741028D",
+  "sizeBytes": 4953137,
+  "publishedAt": "2026-09-14T07:57:27Z",
+  "notes": "交互修复 2.7：切换基酒一级类型时不再回到顶部；每个主页面、酒柜大类与一级类型、横向目录和详情弹窗会分别记住位置，关闭或重启软件后也会恢复。即使某个类型只有一项，操作区仍保持稳定。覆盖升级不会清除酒柜、实验记录、评价或个人改版。"
 }
