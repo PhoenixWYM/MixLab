@@ -3,12 +3,12 @@
   "versionName": "2.5",
   "apkUrl": "https://mixlab-cocktail-cabinet.ym-wang331.chatgpt.site/downloads/MixLab-latest.apk",
   "apkUrls": [
-    "https://raw.githubusercontent.com/PhoenixWYM/MixLab/main/downloads/MixLab-2.5.apk",
     "https://cdn.jsdelivr.net/gh/PhoenixWYM/MixLab@main/downloads/MixLab-2.5.apk",
+    "https://raw.githubusercontent.com/PhoenixWYM/MixLab/main/downloads/MixLab-2.5.apk",
     "https://mixlab-cocktail-cabinet.ym-wang331.chatgpt.site/downloads/MixLab-latest.apk"
   ],
-  "sha256": "75C73A34F1DC52D306F8EB82AE66D24F141CD7964D7D15F1F1633824C91B4004",
+  "sha256": "3C56537FE1A53ACB9BCE5D2979BA6FFBD1D7F568F5453BB238D681285EF77414",
   "sizeBytes": 4949042,
-  "publishedAt": "2026-09-14T06:58:19Z",
+  "publishedAt": "2026-09-14T07:05:24Z",
   "notes": "更新服务 2.5：改用 GitHub 作为主更新源，并增加 CDN 与原站点备用线路。任一线路不可用时会自动切换，下载完成后仍会校验 SHA-256，再由小米系统覆盖升级；酒柜、实验记录、评价和个人改版都会保留。"
 }
